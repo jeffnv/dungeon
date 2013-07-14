@@ -19,9 +19,19 @@ class Dungeon
     @rooms.detect{|room| room.reference == reference}
   end
   
+  def find_room_in_direction(dir)
+    find_room_in_dungeon(@player.location).connections[dir]
+  end
+  
   def initialize(p_name)
     @player = Player.new(p_name)
     @rooms = []
+  end
+  
+  def go(dir)
+    puts "You go #{dir}"
+    @player.location = find_room_in_direction(dir)
+    show_current_description
   end
   
   class Player
@@ -45,6 +55,7 @@ class Dungeon
     def full_description
       "#{@name}\n\nYou are in #{description}"
     end
+    
   end
 end
 
@@ -55,3 +66,6 @@ dung = Dungeon.new('sarah')
 dung.add_room(:mens_room, "Mens Room", "A smelly bathroom, TP on the ground.", {:west => :womens_room})
 dung.add_room(:womens_room, "Womens Room", "Clean and pristine. They must use the men's room.", {:east => :mens_room})
 dung.start(:mens_room)
+
+dung.go(:west)
+dung.go(:east)
